@@ -1,0 +1,48 @@
+<footer class="footer">
+    <div class="footer-container">
+      <div class="footer-main">
+        <!-- Newsletter Section -->
+        <div class="footer-newsletter">
+          <h3>Join Our Newsletter</h3>
+          <p>Subscribe for updates and special offers</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+  
+        <!-- Footer Links -->
+        <div class="footer-links">
+          @for (section of footerLinks; track section.title) {
+            <div class="footer-column">
+              <h4>{{ section.title }}</h4>
+              <ul>
+                @for (link of section.links; track link.name) {
+                  <li><a [routerLink]="link.url">{{ link.name }}</a></li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      </div>
+  
+      <!-- Social and Copyright -->
+      <div class="footer-bottom">
+        <div class="social-icons">
+          @for (social of socialIcons; track social.name) {
+            <a [href]="social.url" [title]="social.name" target="_blank" rel="noopener noreferrer">
+              <i class="fab {{ social.icon }}"></i>
+            </a>
+          }
+        </div>
+        
+        <div class="copyright">
+          <p>&copy; {{ currentYear }} Your Company Name. All rights reserved.</p>
+        </div>
+        
+        <div class="payment-methods">
+          <img src="assets/images/payment-methods.png" alt="Accepted payment methods">
+        </div>
+      </div>
+    </div>
+  </footer>

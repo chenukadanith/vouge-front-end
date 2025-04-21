@@ -1,0 +1,137 @@
+<div class="products-page">
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+      <div class="hero-content">
+        <h1>Shop the Latest Computer Components</h1>
+        <p>High-performance parts for gamers, creators, and professionals</p>
+      </div>
+    </div>
+  
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="container">
+        <div class="filter-row">
+          <div class="search-box">
+            <input type="text" placeholder="Search products..." 
+                   [ngModel]="searchTerm()" 
+                   (ngModelChange)="searchTerm.set($event); filterProducts()">
+            <i class="fas fa-search"></i>
+          </div>
+          
+          <div class="sort-filter">
+            <label for="sort">Sort by:</label>
+            <select id="sort" 
+                    [ngModel]="sortOption()" 
+                    (ngModelChange)="sortOption.set($event); sortProducts()">
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name-asc">Name: A-Z</option>
+              <option value="name-desc">Name: Z-A</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="category-filters">
+          @for (category of categories; track category) {
+            <button [class.active]="selectedCategory() === category"
+                    (click)="filterByCategory(category)">
+              {{category}}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  
+    <!-- Products Grid -->
+    <div class="container">
+      <div class="products-grid">
+        @for (product of filteredProducts(); track product.id) {
+          <div class="product-card">
+            @if (product.discount) {
+              <div class="product-badge">-{{product.discount}}%</div>
+            }
+            <div class="product-image">
+              <img [src]="product.image" [alt]="product.name">
+              <div class="quick-view" (click)="quickView(product)">Quick View</div>
+            </div>
+            <div class="product-details">
+              <h3>{{product.name}}</h3>
+              <div class="product-category">{{product.category}}</div>
+              <div class="product-rating">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <i class="fas fa-star" [class.filled]="star <= product.rating"></i>
+                }
+                <span>({{product.reviews}})</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">${{getFinalPrice(product) | number:'1.2-2'}}</span>
+                @if (product.discount) {
+                  <span class="original-price">${{product.price | number:'1.2-2'}}</span>
+                }
+              </div>
+              <button class="add-to-cart" (click)="addToCart(product)">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        } @empty {
+          <div class="no-products">
+            <p>No products found matching your criteria</p>
+            <button (click)="selectedCategory.set(null); searchTerm.set(''); filterProducts()">
+              Clear filters
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  
+    <!-- Quick View Modal -->
+    @if (selectedProduct()) {
+      <div class="modal">
+        <div class="modal-content">
+          <span class="close" (click)="selectedProduct.set(null)">&times;</span>
+          <div class="modal-row">
+            <div class="modal-image">
+              <img [src]="selectedProduct()!.image" [alt]="selectedProduct()!.name">
+            </div>
+            <div class="modal-details">
+              <h2>{{selectedProduct()!.name}}</h2>
+              <div class="product-rating">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <i class="fas fa-star" [class.filled]="star <= selectedProduct()!.rating"></i>
+                }
+                <span>({{selectedProduct()!.reviews}} reviews)</span>
+              </div>
+              <div class="product-price">
+                <span class="current-price">${{getFinalPrice(selectedProduct()!) | number:'1.2-2'}}</span>
+                @if (selectedProduct()!.discount) {
+                  <span class="original-price">${{selectedProduct()!.price | number:'1.2-2'}}</span>
+                  <span class="discount">Save {{selectedProduct()!.discount}}%</span>
+                }
+              </div>
+              <p class="product-description">{{selectedProduct()!.description}}</p>
+              
+              <div class="product-specs">
+                <h4>Specifications</h4>
+                <ul>
+                  @for (spec of selectedProduct()!.specifications; track spec.key) {
+                    <li><strong>{{spec.key}}:</strong> {{spec.value}}</li>
+                  }
+                </ul>
+              </div>
+              
+              <div class="quantity-selector">
+                <button (click)="decrementQuantity()">-</button>
+                <span>{{quantity()}}</span>
+                <button (click)="incrementQuantity()">+</button>
+              </div>
+              
+              <button class="add-to-cart" (click)="addToCart(selectedProduct()!)">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>

@@ -1,0 +1,74 @@
+<!-- src/app/components/latest-products/latest-products.component.html -->
+<section class="latest-products">
+  <div class="section-header">
+    <h2>{{ title }}</h2>
+    <!-- <p class="subtitle">{{ subtitle }}</p> -->
+    <a routerLink="/products" class="view-all">View All Products</a>
+  </div>
+
+  <div class="product-grid">
+    @for (product of visibleProducts; track product.id) {
+      <div class="product-card">
+        <div class="product-badges">
+          @if (product.isNew && !product.isOnSale) {
+            <span class="badge new">New</span>
+          }
+          @if (product.isOnSale && !product.isNew) {
+            <span class="badge sale">Sale</span>
+          }
+          @if (product.isNew && product.isOnSale) {
+            <span class="badge new-sale">Sale</span>
+          }
+        </div>
+
+        <div class="product-image">
+          <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" style="height:200px; width: 200px;margin-left: 30px;">
+          @if (product.oldPrice) {
+            <div class="discount-badge">
+              -{{ getDiscountPercentage(product) }}%
+            </div>
+          }
+        </div>
+
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-category">{{ product.category }}</p>
+
+          <div class="product-price">
+            <span class="current-price">${{ product.price | number:'1.2-2' }}</span>
+            @if (product.oldPrice) {
+              <span class="old-price">${{ product.oldPrice | number:'1.2-2' }}</span>
+            }
+          </div>
+
+          @if (product.rating) {
+            <div class="product-rating">
+              <div class="stars" [style.width.%]="(product.rating / 5) * 100">★★★★★</div>
+              <span class="rating-value">{{ product.rating | number:'1.1-1' }}</span>
+            </div>
+          } @else {
+            <div class="no-rating">Not rated yet</div>
+          }
+
+          <div class="product-actions">
+            @if (product.stock && product.stock > 0) {
+              <button class="add-to-cart" 
+                      [class.added]="product['addedToCart']"
+                      (click)="addToCart(product)">
+                {{ product['addedToCart'] ? 'Added!' : 'Add to Cart' }}
+              </button>
+            } @else {
+              <button class="out-of-stock" disabled>Out of Stock</button>
+            }
+            
+            @if (product.stock && product.stock > 0) {
+              <span class="stock-status">
+                {{ product.stock }} left in stock
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

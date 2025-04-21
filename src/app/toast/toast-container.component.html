@@ -1,0 +1,17 @@
+<!-- toast-container.component.html -->
+<div class="toast-container">
+    @for (toast of toasts; track toast.id) {
+      <div class="toast toast-{{toast.type}}" [@fadeInOut]>
+        <div class="toast-header">
+          <strong>{{toast.title || getDefaultTitle(toast.type)}}</strong>
+          <button class="close-btn" (click)="removeToast(toast.id)">×</button>
+        </div>
+        <div class="toast-body">
+          {{toast.message}}
+        </div>
+      </div>
+    }
+    @empty {
+      <!-- Optional: show something when there are no toasts -->
+    }
+  </div>

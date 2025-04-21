@@ -1,0 +1,14 @@
+<section class="brand-logos-section">
+    <div class="container">
+      <h2 class="section-title">{{ title }}</h2>
+      <div class="brands-grid">
+        @for (brand of brands; track brand.id) {
+          <div class="brand-item">
+            <a [href]="brand.website" target="_blank" rel="noopener noreferrer">
+              <img [src]="brand.logo" [alt]="brand.name + ' logo'" class="brand-logo">
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
